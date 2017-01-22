@@ -4,6 +4,8 @@ __author__ = 'Egor'
 import csv
 import numpy
 
+path_to_file = ""
+
 
 def calculate_credit(data_source):
     spent_amount = []
@@ -15,6 +17,7 @@ def calculate_credit(data_source):
                 spent_amount.append(amount)
 
         print "Credit: %d" % numpy.sum(spent_amount)
+        # TODO: return directly numpy.sum
     return spent_amount
 
 
@@ -49,7 +52,20 @@ def get_data_period(data_source):
     return dates
 
 
-def get_categories(data_source):
+def get_categories_with_spent_amount(data_source):
+    categories = {}
+
+    with open(data_source) as csv_file:
+        csv_data = csv.DictReader(csv_file)
+        for row in csv_data:
+            categories.update({row['Kategorie']:row['Betrag (EUR)']})
+
+    print 'Categories: %r' % categories
+    return categories
+
+
+def calculate_amount_spent_per_category(data_source):
+    categories_with_amount = get_categories_with_spent_amount(data_source)
     categories = []
 
     with open(data_source) as csv_file:
@@ -57,13 +73,23 @@ def get_categories(data_source):
         for row in csv_data:
             categories.append(row['Kategorie'])
 
-    print 'Categories: %r' % categories
-    return categories
+    categories_set = set(categories)
+    category_with_amount = {}
 
+    for category in categories_set:
+        cat_amount = []
+        for cat in categories_with_amount:
+            cat_amount.append(categories_with_amount.get(category))
+
+        #amount = numpy.sum(numpy.array(cat_amount).astype(numpy.float))
+        category_with_amount.update({category: numpy.sum(numpy.array(cat_amount).astype(numpy.float))})
+
+    print "Amount spent on each cat egory: %r" % category_with_amount
+    return category_with_amount
 
 # TODO: find all categories, than calculate spent amount for each categories and display
 # TODO: change the way how the test data insert into the function. Input path to file dynamically from console.
 
-get_data_period("some file")
-calculate_balance("some file")
-get_categories("some file")
+get_data_period(path_to_file)
+calculate_balance(path_to_file)
+calculate_amount_spent_per_category(path_to_file)
