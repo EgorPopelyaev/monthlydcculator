@@ -1,4 +1,6 @@
 # coding=utf-8
+from collections import defaultdict
+
 __author__ = 'Egor'
 
 import csv
@@ -8,37 +10,31 @@ path_to_file = ""
 
 
 def calculate_credit(data_source):
-    spent_amount = []
+    credit = []
     with open(data_source) as csv_file:
         csv_data = csv.DictReader(csv_file)
         for rows in csv_data:
             amount = float(rows['Betrag (EUR)'])
             if amount < 0:
-                spent_amount.append(amount)
+                credit.append(amount)
 
-        print "Credit: %d" % numpy.sum(spent_amount)
-        # TODO: return directly numpy.sum
-    return spent_amount
+        credit_sum = numpy.sum(credit)
+        print "Credit: %.2f" % credit_sum
+    return credit_sum
 
 
 def calculate_debit(data_source):
-    income = []
+    debit = []
     with open(data_source) as csv_file:
         csv_data = csv.DictReader(csv_file)
         for rows in csv_data:
             amount = float(rows['Betrag (EUR)'])
             if amount > 0:
-                income.append(amount)
-        print "Debit: %d" % (numpy.sum(income))
-    return income
+                debit.append(amount)
 
-
-def calculate_balance(data_source):
-    debit = calculate_debit(data_source)
-    credit = calculate_credit(data_source)
-    balance = numpy.sum(debit) + numpy.sum(credit)
-    print "Balance: %d" % balance
-    return balance
+        debit_sum = numpy.sum(debit)
+        print "Debit: %.2f" % debit_sum
+    return debit_sum
 
 
 def get_data_period(data_source):
@@ -53,15 +49,27 @@ def get_data_period(data_source):
 
 
 def get_categories_with_spent_amount(data_source):
-    categories = {}
+    categories = []
 
     with open(data_source) as csv_file:
         csv_data = csv.DictReader(csv_file)
         for row in csv_data:
-            categories.update({row['Kategorie']:row['Betrag (EUR)']})
+            categories.append((row['Kategorie'], float(row['Betrag (EUR)'])))
 
-    print 'Categories: %r' % categories
-    return categories
+    mapped_categories = defaultdict(list)
+    for k, v in categories:
+        mapped_categories[k].append(v)
+
+    return mapped_categories
+
+
+def calculate_balance(data_source):
+    debit = calculate_debit(data_source)
+    credit = calculate_credit(data_source)
+    balance = debit + credit
+
+    print "Balance: %.2f" % balance
+    return balance
 
 
 def calculate_amount_spent_per_category(data_source):
@@ -73,21 +81,14 @@ def calculate_amount_spent_per_category(data_source):
         for row in csv_data:
             categories.append(row['Kategorie'])
 
-    categories_set = set(categories)
     category_with_amount = {}
 
-    for category in categories_set:
-        cat_amount = []
-        for cat in categories_with_amount:
-            cat_amount.append(categories_with_amount.get(category))
+    for cat in set(categories):
+        category_with_amount.update({cat: numpy.sum(categories_with_amount.get(cat))})
+        print "Amount spent on each category: %r :: %.2f" % (cat, category_with_amount.get(cat))
 
-        #amount = numpy.sum(numpy.array(cat_amount).astype(numpy.float))
-        category_with_amount.update({category: numpy.sum(numpy.array(cat_amount).astype(numpy.float))})
-
-    print "Amount spent on each cat egory: %r" % category_with_amount
     return category_with_amount
 
-# TODO: find all categories, than calculate spent amount for each categories and display
 # TODO: change the way how the test data insert into the function. Input path to file dynamically from console.
 
 get_data_period(path_to_file)
