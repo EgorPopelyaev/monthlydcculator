@@ -1,14 +1,15 @@
 # coding=utf-8
 from collections import defaultdict
-
-__author__ = 'Egor'
-
 import csv
 import numpy
 
-path_to_file = ""
+__author__ = 'Egor'
+
+prompt = '>'
+path_to_file = raw_input(prompt)
 
 
+# This function calculates all expenses for the period of time given in the csv file
 def calculate_credit(data_source):
     credit = []
     with open(data_source) as csv_file:
@@ -23,6 +24,7 @@ def calculate_credit(data_source):
     return credit_sum
 
 
+# This function calculates all incomes for the period of time given in the csv file
 def calculate_debit(data_source):
     debit = []
     with open(data_source) as csv_file:
@@ -37,6 +39,7 @@ def calculate_debit(data_source):
     return debit_sum
 
 
+# This function returns a period of time given in the csv file
 def get_data_period(data_source):
     dates = []
     with open(data_source) as csv_file:
@@ -48,6 +51,7 @@ def get_data_period(data_source):
     return dates
 
 
+# This function returns all categories with amount spent for each category
 def get_categories_with_spent_amount(data_source):
     categories = []
 
@@ -63,6 +67,7 @@ def get_categories_with_spent_amount(data_source):
     return mapped_categories
 
 
+# This function calculates an account balance for the period of time given in csv file
 def calculate_balance(data_source):
     debit = calculate_debit(data_source)
     credit = calculate_credit(data_source)
@@ -72,6 +77,7 @@ def calculate_balance(data_source):
     return balance
 
 
+# This function calculates spent amount for each category
 def calculate_amount_spent_per_category(data_source):
     categories_with_amount = get_categories_with_spent_amount(data_source)
     categories = []
@@ -89,7 +95,9 @@ def calculate_amount_spent_per_category(data_source):
 
     return category_with_amount
 
-# TODO: change the way how the test data insert into the function. Input path to file dynamically from console.
+
+# TODO: develop a web interface to enter data source and show calculation
+# TODO: check for API's to download files
 
 get_data_period(path_to_file)
 calculate_balance(path_to_file)
