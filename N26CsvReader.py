@@ -5,7 +5,7 @@ import numpy
 
 __author__ = 'Egor'
 
-prompt = '>'
+prompt = 'Please enter path to the file >'
 path_to_file = raw_input(prompt)
 
 
@@ -89,15 +89,18 @@ def calculate_amount_spent_per_category(data_source):
 
     category_with_amount = {}
 
+    print "Amount spent on each category:"
     for cat in set(categories):
         category_with_amount.update({cat: numpy.sum(categories_with_amount.get(cat))})
-        print "Amount spent on each category: %r :: %.2f" % (cat, category_with_amount.get(cat))
+        print "%r :: %.2f" % (cat, category_with_amount.get(cat))
 
     return category_with_amount
 
 
 # TODO: develop a web interface to enter data source and show calculation
 # TODO: check for API's to download files
+# TODO: add db connection to store monthly results (not sure)
+# TODO: add graphics visualisation
 
 get_data_period(path_to_file)
 calculate_balance(path_to_file)
