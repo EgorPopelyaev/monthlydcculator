@@ -5,9 +5,6 @@ import numpy
 
 __author__ = 'Egor'
 
-prompt = 'Please enter path to the file >'
-path_to_file = raw_input(prompt)
-
 
 # This function calculates all expenses for the period of time given in the csv file
 def calculate_credit(data_source):
@@ -101,7 +98,3 @@ def calculate_amount_spent_per_category(data_source):
 # TODO: check for API's to download files
 # TODO: add db connection to store monthly results (not sure)
 # TODO: add graphics visualisation
-
-get_data_period(path_to_file)
-calculate_balance(path_to_file)
-calculate_amount_spent_per_category(path_to_file)

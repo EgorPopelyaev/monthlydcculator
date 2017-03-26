@@ -6,8 +6,7 @@ from cStringIO import StringIO
 import re
 import numpy
 
-prompt = 'Please enter path to the file >'
-path = raw_input(prompt)
+#prompt = 'Please enter path to the file >'
 
 
 def get_spent_amount_from_pdf(path):
@@ -49,7 +48,4 @@ def calculate_amount_spent_per_month(path):
 
     print 'Amount spent  during last month: ', credit
     return credit
-
-
-calculate_amount_spent_per_month(path)
 
